@@ -26,12 +26,23 @@ public class ParkingService {
         this.parkingSpotDAO = parkingSpotDAO;
         this.ticketDAO = ticketDAO;
     }
-
+    /**
+     * When the vehicle arrives to register 
+     */
     public void processIncomingVehicle() {
         try{
             ParkingSpot parkingSpot = getNextParkingNumberIfAvailable();
             if(parkingSpot !=null && parkingSpot.getId() > 0){
                 String vehicleRegNumber = getVehichleRegNumber();
+//              if( ticketDAO.getTicket(vehicleRegNumber)) {
+////                ticket deja existant donc avec la meme plaque 
+//                System.out.println("Welcome Back! As a recurring user of our parking lot,"
+//                			+ "you'll benefit from a 5% discount.");
+//                ticket.setRecurrentUser(1);
+//                Ajouter '1' pour recurrentUser afin de le reutiliser pour pour calculatorFare
+//                }
+// 				Dans la DB Avoir Une colonne où ReccurentUser(Boolean) = true 
+//				car on va en avoir besoin pour FareCalculatorService
                 parkingSpot.setAvailable(false);
                 parkingSpotDAO.updateParking(parkingSpot);//allot this parking space and mark it's availability as false
 
@@ -41,7 +52,7 @@ public class ParkingService {
                 //ticket.setId(ticketID);
                 ticket.setParkingSpot(parkingSpot);
                 ticket.setVehicleRegNumber(vehicleRegNumber);
-                ticket.setPrice(0);
+                ticket.setPrice(0.0);
                 ticket.setInTime(inTime);
                 ticket.setOutTime(null);
                 ticketDAO.saveTicket(ticket);
@@ -108,8 +119,8 @@ public class ParkingService {
                 ParkingSpot parkingSpot = ticket.getParkingSpot();
                 parkingSpot.setAvailable(true);
                 parkingSpotDAO.updateParking(parkingSpot);
-                System.out.println("Please pay the parking fare:" + ticket.getPrice());
-                System.out.println("Recorded out-time for vehicle number:" + ticket.getVehicleRegNumber() + " is:" + outTime);
+                System.out.println("Please pay the parking fare : " + ticket.getPrice() + " $");
+                System.out.println("Recorded out-time for vehicle number : " + ticket.getVehicleRegNumber() + " is:" + outTime);
             }else{
                 System.out.println("Unable to update ticket information. Error occurred");
             }
