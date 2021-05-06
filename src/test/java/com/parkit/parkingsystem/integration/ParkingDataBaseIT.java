@@ -45,6 +45,12 @@ public class ParkingDataBaseIT {
     private void setUpPerTest() throws Exception {
         when(inputReaderUtil.readSelection()).thenReturn(1);
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
+        /*
+         * This command cleans all input in DB before each test
+         * to make sure is okay
+         * However, if you want to test the display of 5% discount
+         * you have to deactivate this method
+         */
         dataBasePrepareService.clearDataBaseEntries();
     }
 
@@ -67,17 +73,6 @@ public class ParkingDataBaseIT {
     //THEN
     assertThat(ticketDAO.getTicket(parkingService.getVehichleRegNumber())).isNotNull();
     assertThat(ticketDAO.getTicket(parkingService.getVehichleRegNumber()).getParkingSpot().isAvailable()).isFalse();
-
-        
-        
-        //WHEN
-//        Ticket result = ticketDAO.getTicket(parkingService.getVehichleRegNumber());
-//        if(result == null) 
-//    	   assertEquals(true,false);
-//
-//       ParkingSpot spot = result.getParkingSpot();
-//       	if(spot == null) 
-//    	   assertEquals(true,false);
 
     } 
     
