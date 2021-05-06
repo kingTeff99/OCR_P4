@@ -11,22 +11,18 @@ public class Ticket {
     private Date outTime;
     private boolean recurrentUser;
 
-//		A EFFACER AU CAS OU TOUT EST OKAY  
-//    public Ticket(int id,ParkingSpot parkingSpot,String vehicleRegNumber
-//    		,double price,Date inTime,Date outTime) {
-//    	this.id = id;
-//    	this.parkingSpot = parkingSpot;
-//    	this.vehicleRegNumber = vehicleRegNumber;
-//    	this.price = price;
-//    	this.inTime = inTime;
-//    	this.outTime = outTime;
-//    }
-    
-//    public String toString() {
-//    	return this.ticket;
-//    }
+//    public Ticket() {
+//    	super();
+//		this.id = id;
+//		this.parkingSpot = parkingSpot;
+//		this.vehicleRegNumber = vehicleRegNumber;
+//		this.price = price;
+//		this.inTime = inTime;
+//		this.outTime = outTime;
+//		this.recurrentUser = recurrentUser;
+//	}
 
-    public int getId() {
+	public int getId() {
         return id;
     }
 

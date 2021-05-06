@@ -151,5 +151,23 @@ public class FareCalculatorServiceTest {
         fareCalculatorService.calculateFare(ticket);
         assertEquals((0.0 * Fare.BIKE_RATE_PER_HOUR), ticket.getPrice() );
     }
+    
+    @Test
+    public void calculateFareFor5PercentDiscountForCarWith3HoursParkingTime(){
+    	Date inTime = new Date();
+        inTime.setTime( System.currentTimeMillis() - (180 * 60 * 1000));
+        Date outTime = new Date();
+        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.CAR,false);
+
+        ticket.setInTime(inTime);
+        ticket.setOutTime(outTime);
+        ticket.setRecurrentUser(true);
+        ticket.setParkingSpot(parkingSpot);
+        fareCalculatorService.calculateFare(ticket);
+//      assertThrows(NullPointerException.class, () -> fareCalculatorService.calculateFare(ticket));
+        assertEquals((3.0 * Fare.DISCOUNT_FOR_RECURRENT_USER * Fare.CAR_RATE_PER_HOUR), ticket.getPrice() );	
+
+    	
+    }
 
 }

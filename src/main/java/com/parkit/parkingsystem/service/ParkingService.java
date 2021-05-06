@@ -34,27 +34,25 @@ public class ParkingService {
             ParkingSpot parkingSpot = getNextParkingNumberIfAvailable();
             if(parkingSpot !=null && parkingSpot.getId() > 0){
                 String vehicleRegNumber = getVehichleRegNumber();
-//              if( ticketDAO.getTicket(vehicleRegNumber)) {
-////                ticket deja existant donc avec la meme plaque 
-//                System.out.println("Welcome Back! As a recurring user of our parking lot,"
-//                			+ "you'll benefit from a 5% discount.");
-//                ticket.setRecurrentUser(1);
-//                Ajouter '1' pour recurrentUser afin de le reutiliser pour pour calculatorFare
-//                }
-// 				Dans la DB Avoir Une colonne où ReccurentUser(Boolean) = true 
-//				car on va en avoir besoin pour FareCalculatorService
                 parkingSpot.setAvailable(false);
                 parkingSpotDAO.updateParking(parkingSpot);//allot this parking space and mark it's availability as false
-
                 Date inTime = new Date();
                 Ticket ticket = new Ticket();
-                //ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
-                //ticket.setId(ticketID);
+                //ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME,RECURRENT_USER
                 ticket.setParkingSpot(parkingSpot);
                 ticket.setVehicleRegNumber(vehicleRegNumber);
                 ticket.setPrice(0.0);
                 ticket.setInTime(inTime);
                 ticket.setOutTime(null);
+                /*
+                 * Verify if a ticket already existed in the DB 
+                 * to put 5% discount at the exit of the parkingLot
+                 */
+                if( ticketDAO.getTicket(vehicleRegNumber) != null) {
+                  System.out.println("Welcome Back! As a recurring user of our parking lot,"
+                  			+ "you'll benefit from a 5% discount.");
+                  ticket.setRecurrentUser(true);
+                  }
                 ticketDAO.saveTicket(ticket);
                 System.out.println("Generated Ticket and saved in DB");
                 System.out.println("Please park your vehicle in spot number:"+parkingSpot.getId());
@@ -65,7 +63,7 @@ public class ParkingService {
         }
     }
 
-    private String getVehichleRegNumber() throws Exception {
+    public String getVehichleRegNumber() throws Exception {
         System.out.println("Please type the vehicle registration number and press enter key");
         return inputReaderUtil.readVehicleRegistrationNumber();
     }
@@ -119,7 +117,7 @@ public class ParkingService {
                 ParkingSpot parkingSpot = ticket.getParkingSpot();
                 parkingSpot.setAvailable(true);
                 parkingSpotDAO.updateParking(parkingSpot);
-                System.out.println("Please pay the parking fare : " + ticket.getPrice() + " $");
+                System.out.printf("Please pay the parking fare : %.2f $ ", ticket.getPrice());
                 System.out.println("Recorded out-time for vehicle number : " + ticket.getVehicleRegNumber() + " is:" + outTime);
             }else{
                 System.out.println("Unable to update ticket information. Error occurred");

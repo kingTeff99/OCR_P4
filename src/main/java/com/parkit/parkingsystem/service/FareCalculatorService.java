@@ -20,19 +20,7 @@ public class FareCalculatorService {
         //if 30 minutes or less
     	if(duration <= 1800000.0) {
     		ticket.setPrice(0.0);
-    	}
-//    	else if(recurrentUser) { // S'il est récurrent on lui applique la reduction
-//    		switch (ticket.getParkingSpot().getParkingType()){
-//            case CAR: {
-//            		0.95 * ticket.setPrice((duration / 3600000.0) * Fare.CAR_RATE_PER_HOUR);
-//                break;
-//            }
-//            case BIKE: {
-//            		0.95 * ticket.setPrice((duration / 3600000.0) * Fare.BIKE_RATE_PER_HOUR);
-//                break;
-//            }
-//    	}
-    	else {
+    	} else {
 	        switch (ticket.getParkingSpot().getParkingType()){
 	            case CAR: {
 	            		ticket.setPrice((duration / 3600000.0) * Fare.CAR_RATE_PER_HOUR);
@@ -44,6 +32,12 @@ public class FareCalculatorService {
 	            }
 	            default: throw new IllegalArgumentException("Unkown Parking Type");
 	        }
+    	}  
+	     /*
+	      * Application of 5% discount on normal fare
+	      */
+	     if(ticket.isRecurrentUser() == true) {
+	        ticket.setPrice(ticket.getPrice() * Fare.DISCOUNT_FOR_RECURRENT_USER);
+	      }
     	}
-    }
-}
+ }

@@ -1,15 +1,8 @@
 package com.parkit.parkingsystem.integration;
 
-import com.mysql.cj.xdevapi.Table;
-import com.parkit.parkingsystem.constants.ParkingType;
-import com.parkit.parkingsystem.dao.ParkingSpotDAO;
-import com.parkit.parkingsystem.dao.TicketDAO;
-import com.parkit.parkingsystem.integration.config.DataBaseTestConfig;
-import com.parkit.parkingsystem.integration.service.DataBasePrepareService;
-import com.parkit.parkingsystem.model.ParkingSpot;
-import com.parkit.parkingsystem.model.Ticket;
-import com.parkit.parkingsystem.service.ParkingService;
-import com.parkit.parkingsystem.util.InputReaderUtil;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,14 +11,17 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.mockito.Mockito.when;
+import com.parkit.parkingsystem.dao.ParkingSpotDAO;
+import com.parkit.parkingsystem.dao.TicketDAO;
+import com.parkit.parkingsystem.integration.config.DataBaseTestConfig;
+import com.parkit.parkingsystem.integration.service.DataBasePrepareService;
+import com.parkit.parkingsystem.service.ParkingService;
+import com.parkit.parkingsystem.util.InputReaderUtil;
 
-import java.util.Date;
 
 @ExtendWith(MockitoExtension.class)
 public class ParkingDataBaseIT {
 	
-//	Table table = new Table(Test, "parking", "ticket");
 	private static DataBaseTestConfig dataBaseTestConfig = new DataBaseTestConfig();
     private static ParkingSpotDAO parkingSpotDAO;
     private static TicketDAO ticketDAO;
@@ -34,8 +30,6 @@ public class ParkingDataBaseIT {
 
     @Mock
     private static InputReaderUtil inputReaderUtil;
-	private ParkingSpot parkingSpot;
-	private Date outTime;
 
     @BeforeAll
     private static void setUp() throws Exception{
@@ -60,31 +54,49 @@ public class ParkingDataBaseIT {
     }
 
     @Test
-    public void testParkingACar(){
-        ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
-        parkingService.processIncomingVehicle();
-//        ParkingSpot parkingSpot = new ParkingSpot(1, ParkingType.valueOf("CAR"), false);
-//		//TODO: check that a ticket is currently saved in DB and Parking table is updated with availability
-//        dataSource ds = dataBaseTestConfig.getConnection();
-//        Table table = new Table(dataSource, "ticket");
-//		assertThat(table).row(1).column(3).value("ABCDEF");
-//        System.out.println(ticketDAO.getTicket("ABCDEF").toString());
-//      parkingSpotDAO.updateParking(parkingSpot);
+    public void testParkingACar() throws Exception{
+    //TODO: check that a ticket is currently saved in DB and Parking table is updated with availability
+    //GIVEN
+    //...
+    	
+    //WHEN
+    ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
+    parkingService.processIncomingVehicle();   	
+        
+        
+    //THEN
+    assertThat(ticketDAO.getTicket(parkingService.getVehichleRegNumber())).isNotNull();
+    assertThat(ticketDAO.getTicket(parkingService.getVehichleRegNumber()).getParkingSpot().isAvailable()).isFalse();
 
+        
+        
+        //WHEN
+//        Ticket result = ticketDAO.getTicket(parkingService.getVehichleRegNumber());
+//        if(result == null) 
+//    	   assertEquals(true,false);
+//
+//       ParkingSpot spot = result.getParkingSpot();
+//       	if(spot == null) 
+//    	   assertEquals(true,false);
 
-
-    }
+    } 
     
     @Test
-    public void testParkingLotExit(){
-        testParkingACar();
-        ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
-        parkingService.processExitingVehicle();
-//        //TODO: check that the fare generated and out time are populated correctly in the database
-//        ticket.getPrice() est different de null
-//    	  ticket.getOutTime() est different de null
+    public void testParkingLotExit() throws Exception{
+    //TODO: check that the fare generated and out time are populated correctly in the database
+    //GIVEN
+    //...
+    	
+    //WHEN
+    testParkingACar();
+    ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
+    parkingService.processExitingVehicle();
+        
+        
+    //THEN
+    assertThat(ticketDAO.getTicket(parkingService.getVehichleRegNumber()).getPrice()).isNotNull();
+    assertThat(ticketDAO.getTicket(parkingService.getVehichleRegNumber()).getOutTime()).isNotNull();
+        
     }
-//    
-//    
-    	//TODO:Faire un testParkingABike()
+    
 }
