@@ -164,7 +164,6 @@ public class FareCalculatorServiceTest {
         ticket.setRecurrentUser(true);
         ticket.setParkingSpot(parkingSpot);
         fareCalculatorService.calculateFare(ticket);
-//      assertThrows(NullPointerException.class, () -> fareCalculatorService.calculateFare(ticket));
         assertEquals((3.0 * Fare.DISCOUNT_FOR_RECURRENT_USER * Fare.CAR_RATE_PER_HOUR), ticket.getPrice() );	
 
     	
