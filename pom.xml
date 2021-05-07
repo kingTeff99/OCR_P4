@@ -51,13 +51,13 @@
         <dependency>
             <groupId>org.jacoco</groupId>
             <artifactId>jacoco-maven-plugin</artifactId>
-            <version>0.8.5</version>
+            <version>0.8.7</version>
             <type>maven-plugin</type>
         </dependency>
         <dependency>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-assembly-plugin</artifactId>
-            <version>3.0.0</version>
+            <version>3.3.0</version>
         </dependency>
         <dependency>
   			<groupId>org.assertj</groupId>
@@ -79,13 +79,11 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
+                <version>3.3.0</version>
+                <configuration>
+                <descriptors>
+                	<descriptor>src/target/jar.xml</descriptor>
+                </descriptors>
                             <archive>
                                 <manifest>
                                     <mainClass>
@@ -93,10 +91,17 @@
                                     </mainClass>
                                 </manifest>
                             </archive>
-                            <descriptorRefs>
-                                <descriptorRef>executable-jar-with-dependencies</descriptorRef>
-                            </descriptorRefs>
+<!--                             <descriptorRefs> -->
+<!--                                 <descriptorRef>executable-jar-with-dependencies</descriptorRef> -->
+<!--                             </descriptorRefs> -->
                         </configuration>
+                <executions>
+                    <execution>
+                    	<id>executable</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
@@ -137,7 +142,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.5</version>
+                <version>0.8.7</version>
                 <executions>
                     <execution>
                         <goals>
